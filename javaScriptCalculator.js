@@ -12,6 +12,7 @@ var variable_array = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];                // array
 
 //* Main code
 function calculator() {
+    console.log("Start");
     var equation = getString();             // gets user input
     dataTypeConvert(equation);              // converts data
     console.log(equation);
