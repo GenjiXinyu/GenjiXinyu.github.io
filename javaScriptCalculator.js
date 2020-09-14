@@ -34,6 +34,9 @@ function dataTypeConvert(equation) {
         if (isNaN(equation[i]) == false) {              // determines if object is not a number
             equation[i] = parseFloat(equation[i]);              // converts from object to float
         }
+        if (isLetter(equation[i]) == true) {
+            equation[i] = variable_array;
+        }
     }
 }
 
@@ -249,17 +252,17 @@ function websitePrint(equation_x) {
     }
 }
 
-//* Does the basic calculations of a single operator
-//? I think that this will not work for the array calculations
+//TODO Add the array calculations
+
 function basicCalculator(equation_x, item_num) {
     if (equation_x[item_num] == "^") {
-        let answer = Math.pow(equation_x[item_num - 1], equation_x[item_num + 1]);
+        let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], power);
         equation_x.splice(item_num, 1, answer);
         equation_x.splice(item_num + 1, 1);
         equation_x.splice(item_num - 1, 1);
     }
     else if (equation_x[item_num] == "*") {
-        let answer = equation_x[item_num - 1] * equation_x[item_num + 1];
+        let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], multiply);
         equation_x.splice(item_num, 1, answer);
         equation_x.splice(item_num + 1, 1);
         equation_x.splice(item_num - 1, 1);
@@ -269,47 +272,70 @@ function basicCalculator(equation_x, item_num) {
             console.log("Math Error");
             //TODO Add the exit code
         }
-        let answer = equation_x[item_num - 1] / equation_x[item_num + 1];
+        let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], divide);
         equation_x.splice(item_num, 1, answer);
         equation_x.splice(item_num + 1, 1);
         equation_x.splice(item_num - 1, 1);
     }
     else if (equation_x[item_num] == "+") {
-        let answer = equation_x[item_num - 1] + equation_x[item_num + 1];
+        let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], add);
         equation_x.splice(item_num, 1, answer);
         equation_x.splice(item_num + 1, 1);
         equation_x.splice(item_num - 1, 1);
     }
     else if (equation_x[item_num] == "-") {
-        let answer = equation_x[item_num - 1] - equation_x[item_num + 1];
+        let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], subtract);
         equation_x.splice(item_num, 1, answer);
         equation_x.splice(item_num + 1, 1);
         equation_x.splice(item_num - 1, 1);
     }
 }
 
-//TODO Add the array calculations
 
-function binaryOperationsCalculator(equation_x, item_num, operator) {
-
+function binaryCalculator(a, b, operator) {
+    let result = [];
+    if (a.length > 1 && b.length > 1) {
+        for (let i = 0; i < a.length; i++) {
+            result.push(operator(a[i], b[i]));
+        }
+    }
+    else if (a.length > 1) {
+        for (let i = 0; i < a.length; i++) {
+            result.push(operator(a[i], b));
+        }
+    }
+    else if (b.length > 1) {
+        for (let i = 0; i < b.length; i++) {
+            result.push(operator(a, b[i]));
+        }
+    }
+    else {
+        let nonVariable_result = operator(a, b);
+        return nonVariable_result;
+    }
+    return result;
 }
 
 function power(x, y) {
-    
+    return Math.pow(x, y);
 }
 
 function multiply(x, y) {
-
+    return x * y;
 }
 
 function divide(x, y) {
-    
+    return x / y;
 }
 
 function add(x, y) {
-
+    return x + y;
 }
 
 function subtract(x, y) {
+    return x - y;
+}
 
+function isLetter(char) {
+    return (/[a-zA-Z]/).test(char)
 }
