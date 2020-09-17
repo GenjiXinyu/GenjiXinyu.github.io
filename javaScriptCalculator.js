@@ -15,15 +15,13 @@ var variableExist = false;
 function calculator() {
     var equation = getString();             // gets user input
     dataTypeConvert(equation);              // converts data
-    console.log(equation);
     websitePrint(equation);             // prints step
     var recurse = 0;                // initialization
     expressionEvaluation(equation, recurse);                // finds answer
-    console.log(equation);
     websitePrint(equation);             // prints answer
     if (variableExist == true) {
         TESTER = document.getElementById('tester');
-        Plotly.newPlot(TESTER, [{x: variable_array, y: equation}], {margin: {t: 0}});
+        Plotly.newPlot(TESTER, [{x: variable_array, y: equation[0]}], {margin: {t: 0}});
     }
 }
 
@@ -84,7 +82,6 @@ function expressionEvaluation(equation_x, recurse) {
         for (let i = 0; i < equation_x.length; i++) {
             if (equation_x[i] == "parentheses") {
                 recurse++;
-                console.log(parentheses);
                 websitePrint(parentheses);
                 parentheses_answer = expressionEvaluation(parentheses, recurse);
                 equation_x.splice(i, 1, parentheses_answer);
@@ -130,7 +127,6 @@ function getString() {
 
 //* Determines order of operations
 function operationOrder(equation_x) {
-    console.log(equation_x);
     websitePrint(equation_x);               // prints step
     var items = equation_x.length;              // initialization
     var item_num = 0;
@@ -145,7 +141,6 @@ function operationOrder(equation_x) {
                         items = equation_x.length;              // reinitialization
                         item_num = 0;
                         is_calc = true;
-                        console.log(equation_x);
                         websitePrint(equation_x);               // prints step
                         break;
                     }
@@ -163,7 +158,6 @@ function operationOrder(equation_x) {
                         items = equation_x.length;              // reinitialization
                         item_num = 0;
                         is_calc = true;
-                        console.log(equation_x);
                         websitePrint(equation_x);               // prints step
                         break;
                     }
@@ -181,7 +175,6 @@ function operationOrder(equation_x) {
                         items = equation_x.length;              // reinitialization
                         item_num = 0;
                         is_calc = true;
-                        console.log(equation_x);
                         websitePrint(equation_x);               // prints step
                         break;
                     }
@@ -199,7 +192,6 @@ function operationOrder(equation_x) {
                         items = equation_x.length;              // reinitialization
                         item_num = 0;
                         is_calc = true;
-                        console.log(equation_x);
                         websitePrint(equation_x);               // prints setp
                         break;
                     }
