@@ -23,7 +23,7 @@ function calculator() {
     websitePrint(equation);             // prints answer
     if (variableExist == true) {
         TESTER = document.getElementById('tester');
-        Plotly.newPlot(TESTER, [{x: variable_array, y: variable_array}], {margin: {t: 0}});
+        Plotly.newPlot(TESTER, [{x: variable_array, y: equation}], {margin: {t: 0}});
     }
 }
 
