@@ -22,8 +22,8 @@ function calculator() {
     websitePrint(equation);             // prints answer
     TESTER = document.getElementById('tester');
       Plotly.newPlot(TESTER, [{
-        x: [1, 2, 3, 4, 5],
-        y: [1, 2, 4, 8, 16]}], {
+        x: variable_array,
+        y: variable_array}], {
         margin: {t: 0}
       });
 }
