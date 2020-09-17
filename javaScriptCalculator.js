@@ -6,6 +6,7 @@ var b3_operations = ["+", "-"];             // third priority binary operations
 var u_operations = ["sin", "cos", "tan"];               // unary operations
 var answer_steps_array = [];                // array to record the steps taken to get to answer
 var variable_array = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];                // array for variable       //! Only example do not use
+var variableExist = false;
 
 
 //* Running Calulator Code 
@@ -20,12 +21,10 @@ function calculator() {
     expressionEvaluation(equation, recurse);                // finds answer
     console.log(equation);
     websitePrint(equation);             // prints answer
-    TESTER = document.getElementById('tester');
-      Plotly.newPlot(TESTER, [{
-        x: variable_array,
-        y: variable_array}], {
-        margin: {t: 0}
-      });
+    if (variableExist == true) {
+        TESTER = document.getElementById('tester');
+        Plotly.newPlot(TESTER, [{x: variable_array, y: variable_array}], {margin: {t: 0}});
+    }
 }
 
 //* Converts strings into proper data types
@@ -35,6 +34,7 @@ function dataTypeConvert(equation) {
             equation[i] = parseFloat(equation[i]);              // converts from object to float
         }
         if (isLetter(equation[i]) == true) {
+            variableExist = true;
             equation[i] = variable_array;
         }
     }
@@ -226,29 +226,31 @@ function operationOrder(equation_x) {
 
 //* Prints steps and the answer onto html website
 function websitePrint(equation_x) {
-    let same = true;                // initialization
-    if (answer_steps_array.length != equation_x.length) {               // checks for any repitition in steps
-        same = false;
-    }
-    else {
-        for (let i = 0; i < answer_steps_array.length; i++) {
-            if (answer_steps_array[i] != equation_x[i]) {
-                same = false;
+    if (variableExist == false) {
+        let same = true;                // initialization
+        if (answer_steps_array.length != equation_x.length) {               // checks for any repitition in steps
+            same = false;
+        }
+        else {
+            for (let i = 0; i < answer_steps_array.length; i++) {
+                if (answer_steps_array[i] != equation_x[i]) {
+                    same = false;
+                }
             }
         }
-    }
-    if (same == true) {
-        return true;
-    }
-    else {              // makes a new array for the new step
-        answer_steps_array = [];
-        for (let i = 0; i < equation_x.length; i++) {
-            answer_steps_array.push(equation_x[i]);
+        if (same == true) {
+            return true;
         }
-        let answer_steps_print = answer_steps_array.join("");
-        var text = document.createElement("p");
-        text.innerHTML = answer_steps_print;
-        document.getElementById("result").appendChild(text);                // prints onto the html website
+        else {              // makes a new array for the new step
+            answer_steps_array = [];
+            for (let i = 0; i < equation_x.length; i++) {
+                answer_steps_array.push(equation_x[i]);
+            }
+            let answer_steps_print = answer_steps_array.join("");
+            var text = document.createElement("p");
+            text.innerHTML = answer_steps_print;
+            document.getElementById("result").appendChild(text);                // prints onto the html website
+        }
     }
 }
 
