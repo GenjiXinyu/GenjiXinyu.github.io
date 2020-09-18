@@ -269,7 +269,7 @@ function basicCalculator(equation_x, item_num) {
     else if (equation_x[item_num] == "/") {
         if (equation_x[item_num + 1] == 0) {
             console.log("Math Error");
-            window.stop();
+            //TODO Add the exit code
         }
         else {
             let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], divide);
