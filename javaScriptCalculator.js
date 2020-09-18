@@ -7,6 +7,7 @@ var u_operations = ["sin", "cos", "tan"];               // unary operations
 var answer_steps_array = [];                // array to record the steps taken to get to answer
 var variable_array = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];                // array for variable       //! Only example do not use
 var variableExist = false;
+var errorExist = false;
 
 
 //* Running Calulator Code 
@@ -219,6 +220,7 @@ function operationOrder(equation_x) {
 //* Prints steps and the answer onto html website
 function websitePrint(equation_x) {
     if (variableExist == false) {
+        console.log(equation_x);
         let same = true;                // initialization
         if (answer_steps_array.length != equation_x.length) {               // checks for any repitition in steps
             same = false;
@@ -246,8 +248,7 @@ function websitePrint(equation_x) {
     }
 }
 
-//TODO Add the array calculations
-
+//* Calculator for both variables and constants
 function basicCalculator(equation_x, item_num) {
     if (equation_x[item_num] == "^") {
         let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], power);
@@ -264,12 +265,14 @@ function basicCalculator(equation_x, item_num) {
     else if (equation_x[item_num] == "/") {
         if (equation_x[item_num + 1] == 0) {
             console.log("Math Error");
-            //TODO Add the exit code
+            window.stop();
         }
-        let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], divide);
-        equation_x.splice(item_num, 1, answer);
-        equation_x.splice(item_num + 1, 1);
-        equation_x.splice(item_num - 1, 1);
+        else {
+            let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], divide);
+            equation_x.splice(item_num, 1, answer);
+            equation_x.splice(item_num + 1, 1);
+            equation_x.splice(item_num - 1, 1);
+        }
     }
     else if (equation_x[item_num] == "+") {
         let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], add);
