@@ -5,7 +5,7 @@ var b2_operations = ["*", "/"];             // second priority binary operations
 var b3_operations = ["+", "-"];             // third priority binary operations
 var u_operations = ["sin", "cos", "tan"];               // unary operations
 var answer_steps_array = [];                // array to record the steps taken to get to answer
-var variable_array = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];                // array for variable       //! Only example do not use
+var variable_array = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10];                // array for variable
 var variableExist = false;
 var errorExist = false;
 
