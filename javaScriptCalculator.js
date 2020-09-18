@@ -106,26 +106,6 @@ function expressionEvaluation(equation_x, recurse) {
 
 //* Functions used throughout the code
 
-//* Gets the user input from the submit query
-function getString() {
-    var user = document.querySelector('#userInput').value;              // takes input from the userInput id
-    var user_equation = user.split("");
-    for (let i = user_equation.length - 1; i > 0; i--) {                // adds spaces to split string properly
-        if (isNaN(user_equation[i]) == false && isNaN(user_equation[i-1]) == false);
-        else {
-            user_equation.splice(i, 0, " ");
-        }
-    }
-    var userString = user_equation.join("");
-    user_equation = userString.split(" ");
-    for (let i = user_equation.length - 1; i > -1; i--) {               // creates expression as an array
-        if (user_equation[i] == "") {
-            user_equation.splice(i, 1);
-        }
-    }
-    return user_equation;               // returns the final array
-}
-
 //* Determines order of operations
 function operationOrder(equation_x) {
     websitePrint(equation_x);               // prints step
@@ -248,6 +228,30 @@ function websitePrint(equation_x) {
     }
 }
 
+//* Gets the user input from the submit query
+function getString() {
+    var user = document.querySelector('#userInput').value;              // takes input from the userInput id
+    var user_equation = user.split("");
+    for (let i = user_equation.length - 1; i > 0; i--) {                // adds spaces to split string properly
+        if (isNaN(user_equation[i]) == false && isNaN(user_equation[i-1]) == false);
+        else {
+            user_equation.splice(i, 0, " ");
+        }
+    }
+    var userString = user_equation.join("");
+    user_equation = userString.split(" ");
+    for (let i = user_equation.length - 1; i > -1; i--) {               // creates expression as an array
+        if (user_equation[i] == "") {
+            user_equation.splice(i, 1);
+        }
+    }
+    return user_equation;               // returns the final array
+}
+
+function isLetter(char) {
+    return (/[a-zA-Z]/).test(char)
+}
+
 //* Calculator for both variables and constants
 function basicCalculator(equation_x, item_num) {
     if (equation_x[item_num] == "^") {
@@ -313,26 +317,8 @@ function binaryCalculator(a, b, operator) {
     return result;
 }
 
-function power(x, y) {
-    return Math.pow(x, y);
-}
-
-function multiply(x, y) {
-    return x * y;
-}
-
-function divide(x, y) {
-    return x / y;
-}
-
-function add(x, y) {
-    return x + y;
-}
-
-function subtract(x, y) {
-    return x - y;
-}
-
-function isLetter(char) {
-    return (/[a-zA-Z]/).test(char)
-}
+function power(x, y) {return Math.pow(x, y);}
+function multiply(x, y) {return x * y;}
+function divide(x, y) {return x / y;}
+function add(x, y) {return x + y;}
+function subtract(x, y) {return x - y;}
