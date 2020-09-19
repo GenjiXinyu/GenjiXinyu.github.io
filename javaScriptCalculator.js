@@ -14,6 +14,8 @@ var errorExist = false;
 
 //* Main code
 function calculator() {
+    document.getElementById('result').innerHTML = '';
+    document.getElementById('graph').innerHTML = '';
     var equation = getString();             // gets user input
     dataTypeConvert(equation);              // converts data
     websitePrint(equation);             // prints step
@@ -21,9 +23,13 @@ function calculator() {
     expressionEvaluation(equation, recurse);                // finds answer
     websitePrint(equation);             // prints answer
     if (variableExist == true) {
-        TESTER = document.getElementById('tester');
+        console.log(variable_array);
+        console.log(equation[0]);
+        TESTER = document.getElementById('graph');
         Plotly.newPlot(TESTER, [{x: variable_array, y: equation[0]}], {margin: {t: 0}});
     }
+    variableExist = false;
+    errorExist = false;
 }
 
 //* Converts strings into proper data types
