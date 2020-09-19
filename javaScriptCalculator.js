@@ -4,6 +4,7 @@ var b1_operations = ["^"];              // first priority binary operations
 var b2_operations = ["*", "/"];             // second priority binary operations
 var b3_operations = ["+", "-"];             // third priority binary operations
 var t_operations = ["sin", "cos", "tan"];               // unary operations
+var log_operations = ["log", "ln"];
 var answer_steps_array = [];                // array to record the steps taken to get to answer
 var variableExist = false;
 var errorExist = false;
@@ -51,6 +52,30 @@ function dataTypeConvert(equation) {
                     i = i - 2;
                     typeChange = true;
                 }
+            }
+        }
+        if (typeChange == false) {
+            if (isOperator(equation, i, 3) == "log") {
+                equation.splice(i, 1, isOperator(equation, i, 3));
+                equation.splice(i - 1, 1);
+                equation.splice(i - 2, 1);
+                i = i - 2;
+                typeChange = true;
+            }
+            if (isOperator(equation, i, 2) == "ln") {
+                equation.splice(i, 1, isOperator(equation, i, 2));
+                equation.splice(i - 1, 1);
+                i = i - 1;
+                typeChange = true;
+            }
+        }
+        if (typeChange == false) {
+            if (isOperator(equation, i, 3) == "neg") {
+                equation.splice(i, 1, "*");
+                equation.splice(i - 1, 1, -1);
+                equation.splice(i - 2, 1);
+                i = i - 2;
+                typeChange = true;
             }
         }
         if (isLetter(equation[i]) == true && typeChange == false) {
@@ -158,7 +183,24 @@ function operationOrder(equation_x) {
                 }
             }
         }
-        if (calc_type == 1) {               // checks for first priority binary operators
+        if (calc_type == 1) {               // checks for unary operators
+            for (let i = 0; i < log_operations.length; i++) {
+                try {
+                    if (equation_x[item_num] == log_operations[i]) {
+                        basicCalculator(equation_x, item_num);              // calculates using operator
+                        items = equation_x.length;              // reinitialization
+                        item_num = 0;
+                        is_calc = true;
+                        websitePrint(equation_x);               // prints step
+                        break;
+                    }
+                } 
+                catch (error) {
+                    break;
+                }
+            }
+        }
+        if (calc_type == 2) {               // checks for first priority binary operators
             for (let i = 0; i < b1_operations.length; i++) {
                 try {
                     if (equation_x[item_num] == b1_operations[i]) {
@@ -175,7 +217,7 @@ function operationOrder(equation_x) {
                 }
             }
         }
-        if (calc_type == 2) {               // checks for second priority binary operators
+        if (calc_type == 3) {               // checks for second priority binary operators
             for (let i = 0; i < b2_operations.length; i++) {
                 try {
                     if (equation_x[item_num] == b2_operations[i]) {
@@ -192,7 +234,7 @@ function operationOrder(equation_x) {
                 }
             }
         }
-        if (calc_type == 3) {               // checks for third priority binary operators
+        if (calc_type == 4) {               // checks for third priority binary operators
             for (let i = 0; i < b3_operations.length; i++) {
                 try {
                     if (equation_x[item_num] == b3_operations[i]) {
@@ -216,7 +258,7 @@ function operationOrder(equation_x) {
             item_num = 0;
             calc_type++;
         }
-        if (calc_type > 3 && is_calc == false) {                // exits if there is a syntax error
+        if (calc_type > 4 && is_calc == false) {                // exits if there is a syntax error
             console.log("Syntax Error");
             //TODO Add the exit code
         }
@@ -331,6 +373,16 @@ function basicCalculator(equation_x, item_num) {
         equation_x.splice(item_num, 1, answer);
         equation_x.splice(item_num + 1, 1);
     }
+    else if (equation_x[item_num] == "log") {
+        let answer = unaryCalculator(equation_x[item_num + 1], log);
+        equation_x.splice(item_num, 1, answer);
+        equation_x.splice(item_num + 1, 1);
+    }
+    else if (equation_x[item_num] == "ln") {
+        let answer = unaryCalculator(equation_x[item_num + 1], ln);
+        equation_x.splice(item_num, 1, answer);
+        equation_x.splice(item_num + 1, 1);
+    }
 }
 
 
@@ -381,6 +433,8 @@ function unaryCalculator(a, operator) {
 function sin(x) {return Math.sin(x);}
 function cos(x) {return Math.cos(x);}
 function tan(x) {return Math.tan(x);}
+function log(x) {return Math.log10(x);}
+function ln(x) {return Math.log(x);}
 
 function isOperator(equation_x, item_num, num) {
     let operator_array = [];
