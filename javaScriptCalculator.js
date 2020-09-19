@@ -78,6 +78,18 @@ function dataTypeConvert(equation) {
                 typeChange = true;
             }
         }
+        if (typeChange == false) {
+            if (isOperator(equation, i, 3) == "pie") {
+                equation.splice(i, 1, Math.PI);
+                equation.splice(i - 1, 1);
+                equation.splice(i - 2, 1);
+                i = i - 2;
+                typeChange = true;
+            }
+        }
+        if (equation[i] == "e" && typeChange == false) {
+            equation.splice(i, 1, Math.E);
+        }
         if (isLetter(equation[i]) == true && typeChange == false) {
             variableExist = true;
             let variable_array = [];
