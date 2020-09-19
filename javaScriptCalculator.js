@@ -1,11 +1,10 @@
 //* Global Variables
 
-var b1_operations = ["^"];              // first priority binary operations
+var b1_operations = ["^", "root"];              // first priority binary operations
 var b2_operations = ["*", "/"];             // second priority binary operations
 var b3_operations = ["+", "-"];             // third priority binary operations
-var u_operations = ["sin", "cos", "tan"];               // unary operations
+var t_operations = ["sin", "cos", "tan"];               // unary operations
 var answer_steps_array = [];                // array to record the steps taken to get to answer
-var variable_array = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10];                // array for variable
 var variableExist = false;
 var errorExist = false;
 
@@ -23,6 +22,10 @@ function calculator() {
     expressionEvaluation(equation, recurse);                // finds answer
     websitePrint(equation);             // prints answer
     if (variableExist == true) {
+        let variable_array = [];
+        for (let i = -10; i < 10.1; i = i + 0.1) {
+            variable_array.push(i);
+        }
         TESTER = document.getElementById('graph');
         Plotly.newPlot(TESTER, [{x: variable_array, y: equation[0]}], {margin: {t: 0}});
     }
@@ -40,9 +43,9 @@ function dataTypeConvert(equation) {
             typeChange = true;
         }
         if (typeChange == false) {
-            for (let j = 0; j < u_operations.length; j++) {
-                if (isU_Operator(equation, i) == u_operations[j]) {
-                    equation.splice(i, 1, isU_Operator(equation, i));
+            for (let j = 0; j < t_operations.length; j++) {
+                if (isOperator(equation, i, 3) == t_operations[j]) {
+                    equation.splice(i, 1, isOperator(equation, i, 3));
                     equation.splice(i - 1, 1);
                     equation.splice(i - 2, 1);
                     i = i - 2;
@@ -52,11 +55,25 @@ function dataTypeConvert(equation) {
         }
         if (isLetter(equation[i]) == true && typeChange == false) {
             variableExist = true;
+            let variable_array = [];
+            for (let i = -10; i < 10.1; i = i + 0.1) {
+                variable_array.push(i);
+            }
             equation[i] = variable_array;
             typeChange = true;
         }
+        if (typeChange == false) {
+            if (isOperator(equation, i, 4) == "root") {
+                console.log("I found a root");
+                equation.splice(i, 1, isOperator(equation, i, 4));
+                equation.splice(i - 1, 1);
+                equation.splice(i - 2, 1);
+                equation.splice(i - 3, 1);
+                i = i - 3;
+                typeChange = true;
+            }
+        }
     }
-    console.log(equation);
 }
 
 //* Evaluates the expression and finds answer
@@ -135,9 +152,9 @@ function operationOrder(equation_x) {
     while (items != 1) {                // repeats until answer found
         var is_calc = false;
         if (calc_type == 0) {               // checks for unary operators
-            for (let i = 0; i < u_operations.length; i++) {
+            for (let i = 0; i < t_operations.length; i++) {
                 try {
-                    if (equation_x[item_num] == u_operations[i]) {
+                    if (equation_x[item_num] == t_operations[i]) {
                         basicCalculator(equation_x, item_num);              // calculates using operator
                         items = equation_x.length;              // reinitialization
                         item_num = 0;
@@ -279,6 +296,16 @@ function basicCalculator(equation_x, item_num) {
         equation_x.splice(item_num + 1, 1);
         equation_x.splice(item_num - 1, 1);
     }
+    else if (equation_x[item_num] == "root") {
+        if (equation_x[item_num + 1] < 0) {
+            console.log("Math Error");
+            //TODO Add the exit code
+        }
+        let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], root);
+        equation_x.splice(item_num, 1, answer);
+        equation_x.splice(item_num + 1, 1);
+        equation_x.splice(item_num - 1, 1);
+    }
     else if (equation_x[item_num] == "*") {
         let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], multiply);
         equation_x.splice(item_num, 1, answer);
@@ -352,6 +379,7 @@ function binaryCalculator(a, b, operator) {
 }
 
 function power(x, y) {return Math.pow(x, y);}
+function root(x, y) {return Math.root(x, y);}
 function multiply(x, y) {return x * y;}
 function divide(x, y) {return x / y;}
 function add(x, y) {return x + y;}
@@ -375,9 +403,10 @@ function sin(x) {return Math.sin(x);}
 function cos(x) {return Math.cos(x);}
 function tan(x) {return Math.tan(x);}
 
-function isU_Operator(equation_x, item_num) {
+function isOperator(equation_x, item_num, num) {
+    console.log(num);
     let operator_array = [];
-    for (let i = 2; i > -1; i--) {
+    for (let i = num - 1; i > -1; i--) {
         operator_array.push(equation_x[item_num - i]);
     }
     let operator = operator_array.join("");
