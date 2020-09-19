@@ -2,7 +2,7 @@
 
 ## Links
 
-**Website Link:** [file:///Users/Kenji/GenjiXinyu.github.io/index.html]
+**Website Link:** [JavaScript Calculator](https://genjixinyu.github.io)
 
 **Graphing Tool Link:** [Website](https://plotly.com) and [JS Script](https://cdn.plot.ly/plotly-latest.min.js)
 
@@ -16,7 +16,7 @@ The calculator will show each steps in the process to finding an answer, it will
 
 ### Usable Operands
 
-1. **Trigonometry:** sin, cos, tan, pie
+1. **Trigonometry:** sin, cos, tan, pi
 2. **Logorithm:** log, ln, e
 3. **Binary Operations:** ^, +, -, *, /
 4. **Negative:** neg

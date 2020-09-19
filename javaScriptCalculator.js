@@ -7,7 +7,6 @@ var t_operations = ["sin", "cos", "tan"];               // unary operations
 var log_operations = ["log", "ln"];
 var answer_steps_array = [];                // array to record the steps taken to get to answer
 var variableExist = false;
-var errorExist = false;
 
 
 //* Running Calulator Code 
@@ -20,18 +19,22 @@ function calculator() {
     dataTypeConvert(equation);              // converts data
     websitePrint(equation);             // prints step
     var recurse = 0;                // initialization
-    expressionEvaluation(equation, recurse);                // finds answer
-    websitePrint(equation);             // prints answer
-    if (variableExist == true) {
-        let variable_array = [];
-        for (let i = -10; i < 10.1; i = i + 0.1) {
-            variable_array.push(i);
+    try {
+        expressionEvaluation(equation, recurse);                // finds answer
+        websitePrint(equation);             // prints answer
+        if (variableExist == true) {
+            let variable_array = [];
+            for (let i = -10; i < 10.1; i = i + 0.1) {
+                variable_array.push(i);
+            }
+            TESTER = document.getElementById('graph');
+            Plotly.newPlot(TESTER, [{x: variable_array, y: equation[0]}], {margin: {t: 0}});
         }
-        TESTER = document.getElementById('graph');
-        Plotly.newPlot(TESTER, [{x: variable_array, y: equation[0]}], {margin: {t: 0}});
+    }
+    catch (error) {
+        websitePrint(error);
     }
     variableExist = false;
-    errorExist = false;
 }
 
 //* Converts strings into proper data types
@@ -79,11 +82,10 @@ function dataTypeConvert(equation) {
             }
         }
         if (typeChange == false) {
-            if (isOperator(equation, i, 3) == "pie") {
+            if (isOperator(equation, i, 2) == "pi") {
                 equation.splice(i, 1, Math.PI);
                 equation.splice(i - 1, 1);
-                equation.splice(i - 2, 1);
-                i = i - 2;
+                i = i - 1;
                 typeChange = true;
             }
         }
@@ -180,7 +182,7 @@ function operationOrder(equation_x) {
         var is_calc = false;
         if (calc_type == 0) {               // checks for unary operators
             for (let i = 0; i < t_operations.length; i++) {
-                try {
+                if (item_num != items - 1) {
                     if (equation_x[item_num] == t_operations[i]) {
                         basicCalculator(equation_x, item_num);              // calculates using operator
                         items = equation_x.length;              // reinitialization
@@ -189,15 +191,15 @@ function operationOrder(equation_x) {
                         websitePrint(equation_x);               // prints step
                         break;
                     }
-                } 
-                catch (error) {
+                }
+                else {
                     break;
                 }
             }
         }
         if (calc_type == 1) {               // checks for unary operators
             for (let i = 0; i < log_operations.length; i++) {
-                try {
+                if (item_num != items - 1) {
                     if (equation_x[item_num] == log_operations[i]) {
                         basicCalculator(equation_x, item_num);              // calculates using operator
                         items = equation_x.length;              // reinitialization
@@ -206,15 +208,15 @@ function operationOrder(equation_x) {
                         websitePrint(equation_x);               // prints step
                         break;
                     }
-                } 
-                catch (error) {
+                }
+                else {
                     break;
                 }
             }
         }
         if (calc_type == 2) {               // checks for first priority binary operators
             for (let i = 0; i < b1_operations.length; i++) {
-                try {
+                if (item_num != 0 && item_num != items - 1) {
                     if (equation_x[item_num] == b1_operations[i]) {
                         basicCalculator(equation_x, item_num);              // calculates using operator
                         items = equation_x.length;              // reinitialization
@@ -224,14 +226,14 @@ function operationOrder(equation_x) {
                         break;
                     }
                 }
-                catch (error) {
+                else {
                     break;
                 }
             }
         }
         if (calc_type == 3) {               // checks for second priority binary operators
             for (let i = 0; i < b2_operations.length; i++) {
-                try {
+                if (item_num != 0 && item_num != items - 1) {
                     if (equation_x[item_num] == b2_operations[i]) {
                         basicCalculator(equation_x, item_num);              // calculates using operator
                         items = equation_x.length;              // reinitialization
@@ -241,14 +243,14 @@ function operationOrder(equation_x) {
                         break;
                     }
                 }
-                catch (error) {
+                else {
                     break;
                 }
             }
         }
         if (calc_type == 4) {               // checks for third priority binary operators
             for (let i = 0; i < b3_operations.length; i++) {
-                try {
+                if (item_num != 0 && item_num != items - 1) {
                     if (equation_x[item_num] == b3_operations[i]) {
                         basicCalculator(equation_x, item_num);              // calculates using operator
                         items = equation_x.length;              // reinitialization
@@ -258,7 +260,7 @@ function operationOrder(equation_x) {
                         break;
                     }
                 }
-                catch (error) {
+                else {
                     break;
                 }
             }
@@ -271,8 +273,7 @@ function operationOrder(equation_x) {
             calc_type++;
         }
         if (calc_type > 4 && is_calc == false) {                // exits if there is a syntax error
-            console.log("Syntax Error");
-            //TODO Add the exit code
+            throw "Syntax Error";
         }
     }
     return equation_x[0];               // returns answer
@@ -347,9 +348,8 @@ function basicCalculator(equation_x, item_num) {
         equation_x.splice(item_num - 1, 1);
     }
     else if (equation_x[item_num] == "/") {
-        if (equation_x[item_num + 1] == 0) {
-            console.log("Math Error");
-            //TODO Add the exit code
+        if (Math.abs(equation_x[item_num + 1]) < 1e-9) {
+            throw "Divide by Zero Error";
         }
         else {
             let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], divide);
