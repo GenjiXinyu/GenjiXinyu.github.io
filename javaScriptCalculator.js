@@ -1,6 +1,6 @@
 //* Global Variables
 
-var b1_operations = ["^", "root"];              // first priority binary operations
+var b1_operations = ["^"];              // first priority binary operations
 var b2_operations = ["*", "/"];             // second priority binary operations
 var b3_operations = ["+", "-"];             // third priority binary operations
 var t_operations = ["sin", "cos", "tan"];               // unary operations
@@ -62,18 +62,8 @@ function dataTypeConvert(equation) {
             equation[i] = variable_array;
             typeChange = true;
         }
-        if (typeChange == false) {
-            if (isOperator(equation, i, 4) == "root") {
-                console.log("I found a root");
-                equation.splice(i, 1, isOperator(equation, i, 4));
-                equation.splice(i - 1, 1);
-                equation.splice(i - 2, 1);
-                equation.splice(i - 3, 1);
-                i = i - 3;
-                typeChange = true;
-            }
-        }
     }
+    console.log(equation);
 }
 
 //* Evaluates the expression and finds answer
@@ -296,16 +286,6 @@ function basicCalculator(equation_x, item_num) {
         equation_x.splice(item_num + 1, 1);
         equation_x.splice(item_num - 1, 1);
     }
-    else if (equation_x[item_num] == "root") {
-        if (equation_x[item_num + 1] < 0) {
-            console.log("Math Error");
-            //TODO Add the exit code
-        }
-        let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], root);
-        equation_x.splice(item_num, 1, answer);
-        equation_x.splice(item_num + 1, 1);
-        equation_x.splice(item_num - 1, 1);
-    }
     else if (equation_x[item_num] == "*") {
         let answer = binaryCalculator(equation_x[item_num - 1], equation_x[item_num + 1], multiply);
         equation_x.splice(item_num, 1, answer);
@@ -379,7 +359,6 @@ function binaryCalculator(a, b, operator) {
 }
 
 function power(x, y) {return Math.pow(x, y);}
-function root(x, y) {return Math.root(x, y);}
 function multiply(x, y) {return x * y;}
 function divide(x, y) {return x / y;}
 function add(x, y) {return x + y;}
@@ -404,12 +383,10 @@ function cos(x) {return Math.cos(x);}
 function tan(x) {return Math.tan(x);}
 
 function isOperator(equation_x, item_num, num) {
-    console.log(num);
     let operator_array = [];
     for (let i = num - 1; i > -1; i--) {
         operator_array.push(equation_x[item_num - i]);
     }
     let operator = operator_array.join("");
-    console.log(operator);
     return operator;
 }
