@@ -23,8 +23,6 @@ function calculator() {
     expressionEvaluation(equation, recurse);                // finds answer
     websitePrint(equation);             // prints answer
     if (variableExist == true) {
-        console.log(variable_array);
-        console.log(equation[0]);
         TESTER = document.getElementById('graph');
         Plotly.newPlot(TESTER, [{x: variable_array, y: equation[0]}], {margin: {t: 0}});
     }
@@ -34,15 +32,31 @@ function calculator() {
 
 //* Converts strings into proper data types
 function dataTypeConvert(equation) {
-    for (let i = 0; i < equation.length; i++) {
-        if (isNaN(equation[i]) == false) {              // determines if object is not a number
+    let typeChange = false
+    for (let i = equation.length - 1; i > -1; i--) {
+        typeChange = false;
+        if (isNaN(equation[i]) == false && typeChange == false) {              // determines if object is not a number
             equation[i] = parseFloat(equation[i]);              // converts from object to float
+            typeChange = true;
         }
-        if (isLetter(equation[i]) == true) {
+        if (typeChange == false) {
+            for (let j = 0; j < u_operations.length; j++) {
+                if (isU_Operator(equation, i) == u_operations[j]) {
+                    equation.splice(i, 1, isU_Operator(equation, i));
+                    equation.splice(i - 1, 1);
+                    equation.splice(i - 2, 1);
+                    i = i - 2;
+                    typeChange = true;
+                }
+            }
+        }
+        if (isLetter(equation[i]) == true && typeChange == false) {
             variableExist = true;
             equation[i] = variable_array;
+            typeChange = true;
         }
     }
+    console.log(equation);
 }
 
 //* Evaluates the expression and finds answer
@@ -206,7 +220,6 @@ function operationOrder(equation_x) {
 //* Prints steps and the answer onto html website
 function websitePrint(equation_x) {
     if (variableExist == false) {
-        console.log(equation_x);
         let same = true;                // initialization
         if (answer_steps_array.length != equation_x.length) {               // checks for any repitition in steps
             same = false;
@@ -296,6 +309,21 @@ function basicCalculator(equation_x, item_num) {
         equation_x.splice(item_num + 1, 1);
         equation_x.splice(item_num - 1, 1);
     }
+    else if (equation_x[item_num] == "sin") {
+        let answer = unaryCalculator(equation_x[item_num + 1], sin);
+        equation_x.splice(item_num, 1, answer);
+        equation_x.splice(item_num + 1, 1);
+    }
+    else if (equation_x[item_num] == "cos") {
+        let answer = unaryCalculator(equation_x[item_num + 1], cos);
+        equation_x.splice(item_num, 1, answer);
+        equation_x.splice(item_num + 1, 1);
+    }
+    else if (equation_x[item_num] == "tan") {
+        let answer = unaryCalculator(equation_x[item_num + 1], tan);
+        equation_x.splice(item_num, 1, answer);
+        equation_x.splice(item_num + 1, 1);
+    }
 }
 
 
@@ -328,3 +356,31 @@ function multiply(x, y) {return x * y;}
 function divide(x, y) {return x / y;}
 function add(x, y) {return x + y;}
 function subtract(x, y) {return x - y;}
+
+function unaryCalculator(a, operator) {
+    let result = [];
+    if (a.length > 1) {
+        for (let i = 0; i < a.length; i++) {
+            result.push(operator(a[i]));
+        }
+    }
+    else {
+        let nonVariable_result = operator(a);
+        return nonVariable_result;
+    }
+    return result;
+}
+
+function sin(x) {return Math.sin(x);}
+function cos(x) {return Math.cos(x);}
+function tan(x) {return Math.tan(x);}
+
+function isU_Operator(equation_x, item_num) {
+    let operator_array = [];
+    for (let i = 2; i > -1; i--) {
+        operator_array.push(equation_x[item_num - i]);
+    }
+    let operator = operator_array.join("");
+    console.log(operator);
+    return operator;
+}
